@@ -6,6 +6,11 @@ use anyhow::Result;
 
 use crate::interrupt::InterruptState;
 
+#[derive(Debug)]
+pub enum Events {
+    CreatedResource { name: String },
+}
+
 pub(crate) struct Options {
     pub verbose: bool,
     pub color: bool,
