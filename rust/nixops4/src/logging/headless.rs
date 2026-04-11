@@ -1,6 +1,6 @@
-use crate::logging::level_filter::LevelFilter2;
+use crate::{logging::level_filter::LevelFilter2, Goal};
 
-use super::Frontend;
+use super::{Events, Frontend};
 use anyhow::Result;
 use tracing_subscriber::{
     fmt::{format::FmtSpan, Layer as FmtLayer},
@@ -77,5 +77,20 @@ impl Frontend for HeadlessLogger {
             HeadlessLogger::handle_panic_no_exit(panic_info);
             std::process::exit(101);
         })
+    }
+}
+
+impl Observer for HeadlessLogger {
+    fn on_goal(&self, goal: Goal) -> Result<(), anyhow::Error> {
+        match goal {
+            Goal::ResolveCompositePath(path) => {}
+        }
+        Ok(())
+    }
+
+    fn on_event(&self, event: Events) -> Result<(), anyhow::Error> {
+        //TODO: add support for on event for interactive
+        anyhow::bail!("On event isn't supported yet in interactive mode.");
+        Ok(())
     }
 }

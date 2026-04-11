@@ -17,6 +17,11 @@ pub(crate) struct Options {
     pub interactive: bool,
 }
 
+pub(crate) trait Observer {
+    fn on_event(&self, event: Events);
+    fn on_goal(&self, goal: crate::work::Goal);
+}
+
 pub(crate) trait Frontend {
     fn set_up(&mut self, options: &Options) -> Result<()>;
     fn tear_down(&mut self) -> Result<()>;

@@ -32,7 +32,10 @@ use tracing_subscriber::{
     registry::{LookupSpan, SpanData},
 };
 
-use crate::{interrupt::InterruptState, logging::headless::HeadlessLogger};
+use crate::{
+    interrupt::InterruptState,
+    logging::{headless::HeadlessLogger, Observer},
+};
 
 use super::Frontend;
 
@@ -369,6 +372,20 @@ impl Frontend for InteractiveLogger {
             );
             std::process::exit(101);
         })
+    }
+}
+
+impl Observer for InteractiveLogger {
+    fn on_goal(&self, goal: crate::work::Goal) -> Result<(), anyhow::Error> {
+        //TODO: add support for on goal for interactive
+        anyhow::bail!("On goal isn't supported yet in interactive mode.");
+        Ok(())
+    }
+
+    fn on_event(&self, event: super::Events) -> Result<(), anyhow::Error> {
+        //TODO: add support for on event for interactive
+        anyhow::bail!("On event isn't supported yet in interactive mode.");
+        Ok(())
     }
 }
 
