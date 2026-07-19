@@ -2,6 +2,7 @@ mod application;
 mod apply;
 mod complete;
 mod control;
+mod destroy_resource;
 mod eval_client;
 mod interrupt;
 mod logging;
@@ -54,6 +55,21 @@ async fn run_args(interrupt_state: &InterruptState, args: Args) -> Result<()> {
                     for m in members {
                         println!("{}", m);
                     }
+                }
+            };
+            Ok(())
+        }
+        Commands::Resource(sub) => {
+            match sub {
+                Resource::Destroy { resource_path } => {
+                    let mut logging = set_up_logging(interrupt_state, &args)?;
+                    destroy_resource::destroy_resource(
+                        interrupt_state,
+                        &args.options,
+                        resource_path,
+                    )
+                    .await?;
+                    logging.tear_down()?;
                 }
             };
             Ok(())
@@ -284,6 +300,15 @@ enum Members {
 }
 
 #[derive(Subcommand, Debug)]
+enum Resource {
+    /// Destroy a resource, removing it from both the provider and state.
+    Destroy {
+        /// Resource path (dot-separated, e.g., "production.myvm")
+        resource_path: String,
+    },
+}
+
+#[derive(Subcommand, Debug)]
 enum State {
     /// Dump the current state stored in a state-providing resource as JSON.
     ///
@@ -313,6 +338,12 @@ enum Commands {
     /// Commands that operate on component members
     #[command(subcommand)]
     Members(Members),
+
+    /// Commands that operate on resources.
+    ///
+    /// NOTE: this is imperative, there will be declartive ways of managing a resource soon.
+    #[command(subcommand)]
+    Resource(Resource),
 
     /// Commands that operate on deployment state
     #[command(subcommand)]
