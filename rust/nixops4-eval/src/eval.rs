@@ -1077,6 +1077,11 @@ mod tests {
     }
 
     #[test]
+    fn test_dependancy_discover() {
+        //TODO
+    }
+
+    #[test]
     fn test_parse_resource() {
         let ids = Ids::new();
         let guard = gc_register_my_thread().unwrap();
