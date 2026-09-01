@@ -1227,7 +1227,7 @@ impl WorkContext {
         if self.options.verbose {
             eprintln!(
                 "Provider details for {}: {:?}",
-                resource_path, &provider_info
+                resource_path, provider_info
             );
             eprintln!("Resource inputs for {}: {:?}", resource_path, inputs);
         }
